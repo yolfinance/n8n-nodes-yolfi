@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-yolfi",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Create Yolfi crypto checkouts and automate workflows with verified payment events",
 	"license": "MIT",
 	"homepage": "https://yolfi.com",
@@ -13,7 +13,7 @@
 	],
 	"author": {
 		"name": "Yolfi",
-		"email": "287419886+yolfipay@users.noreply.github.com"
+		"email": "yolfipay@gmail.com"
 	},
 	"repository": {
 		"type": "git",
