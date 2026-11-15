@@ -1,0 +1,73 @@
+{
+	"name": "Prepare a fulfillment record from a confirmed Yolfi payment",
+	"nodes": [
+		{
+			"parameters": { "events": ["payment.confirmed"], "includeTestEvents": false },
+			"id": "yolfi-payment-event",
+			"name": "Yolfi payment confirmed",
+			"type": "n8n-nodes-yolfi.yolfiTrigger",
+			"typeVersion": 1,
+			"position": [0, 0]
+		},
+		{
+			"parameters": {
+				"assignments": {
+					"assignments": [
+						{ "id": "event-id", "name": "eventId", "value": "={{ $json.id }}", "type": "string" },
+						{
+							"id": "event-type",
+							"name": "eventType",
+							"value": "={{ $json.type }}",
+							"type": "string"
+						},
+						{
+							"id": "order-id",
+							"name": "merchantOrderId",
+							"value": "={{ $json.data.merchantOrderId || '' }}",
+							"type": "string"
+						},
+						{
+							"id": "checkout-id",
+							"name": "checkoutSessionId",
+							"value": "={{ $json.data.checkoutSessionId || '' }}",
+							"type": "string"
+						},
+						{
+							"id": "invoice-id",
+							"name": "invoiceId",
+							"value": "={{ $json.data.invoiceId || '' }}",
+							"type": "string"
+						}
+					]
+				},
+				"options": {}
+			},
+			"id": "fulfillment-record",
+			"name": "Prepare correlation record",
+			"type": "n8n-nodes-base.set",
+			"typeVersion": 3.4,
+			"position": [260, 0]
+		},
+		{
+			"parameters": {
+				"content": "Before adding fulfillment actions, deduplicate by the signed eventId in a durable store. Deliveries may repeat. Test events are disabled by default. Select your own Yolfi API credential on the trigger.",
+				"height": 220,
+				"width": 420
+			},
+			"id": "deduplication-note",
+			"name": "Fulfillment requirements",
+			"type": "n8n-nodes-base.stickyNote",
+			"typeVersion": 1,
+			"position": [140, 180]
+		}
+	],
+	"connections": {
+		"Yolfi payment confirmed": {
+			"main": [[{ "node": "Prepare correlation record", "type": "main", "index": 0 }]]
+		}
+	},
+	"active": false,
+	"settings": { "executionOrder": "v1" },
+	"pinData": {},
+	"tags": []
+}

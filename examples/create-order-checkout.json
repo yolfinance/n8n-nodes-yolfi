@@ -1,0 +1,60 @@
+{
+	"name": "Create an order checkout with Yolfi",
+	"nodes": [
+		{
+			"parameters": {},
+			"id": "manual-start",
+			"name": "Start example",
+			"type": "n8n-nodes-base.manualTrigger",
+			"typeVersion": 1,
+			"position": [0, 0]
+		},
+		{
+			"parameters": {
+				"assignments": {
+					"assignments": [
+						{
+							"id": "order-id",
+							"name": "orderId",
+							"value": "example-order-2026-001",
+							"type": "string"
+						},
+						{ "id": "order-amount", "name": "amount", "value": "25.00", "type": "string" }
+					]
+				},
+				"options": {}
+			},
+			"id": "example-order",
+			"name": "Example order",
+			"type": "n8n-nodes-base.set",
+			"typeVersion": 3.4,
+			"position": [240, 0]
+		},
+		{
+			"parameters": {
+				"resource": "checkoutSession",
+				"operation": "create",
+				"amount": "={{ $json.amount }}",
+				"currency": "USD",
+				"idempotencyKey": "={{ 'n8n:checkout:' + $json.orderId + ':attempt-1' }}",
+				"checkoutOptions": {
+					"merchantOrderId": "={{ $json.orderId }}",
+					"description": "Example order checkout"
+				}
+			},
+			"id": "create-checkout",
+			"name": "Create Yolfi checkout",
+			"type": "n8n-nodes-yolfi.yolfi",
+			"typeVersion": 1,
+			"position": [480, 0]
+		}
+	],
+	"connections": {
+		"Start example": { "main": [[{ "node": "Example order", "type": "main", "index": 0 }]] },
+		"Example order": { "main": [[{ "node": "Create Yolfi checkout", "type": "main", "index": 0 }]] }
+	},
+	"active": false,
+	"settings": { "executionOrder": "v1" },
+	"pinData": {},
+	"tags": []
+}

@@ -1,0 +1,9 @@
+{
+	"node": "n8n-nodes-yolfi.yolfi",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Finance & Accounting"],
+	"resources": {
+		"primaryDocumentation": [{ "url": "https://docs.yolfi.com/en/api" }]
+	}
+}

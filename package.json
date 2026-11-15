@@ -1,0 +1,62 @@
+{
+	"name": "n8n-nodes-yolfi",
+	"version": "0.1.0",
+	"description": "Create Yolfi crypto checkouts and automate workflows with verified payment events",
+	"license": "MIT",
+	"homepage": "https://yolfi.com",
+	"keywords": [
+		"n8n-community-node-package",
+		"yolfi",
+		"payments",
+		"crypto",
+		"automation"
+	],
+	"author": {
+		"name": "Yolfi",
+		"email": "287419886+yolfipay@users.noreply.github.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/yolfipay/n8n-nodes-yolfi.git"
+	},
+	"bugs": {
+		"url": "https://github.com/yolfipay/n8n-nodes-yolfi/issues"
+	},
+	"engines": {
+		"node": ">=22.16"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"format": "prettier --write credentials nodes tests examples *.json *.md .github/workflows/*.yml",
+		"test": "npm run build && node --test tests/*.test.mjs",
+		"prepublishOnly": "npm run lint && npm test"
+	},
+	"files": [
+		"dist",
+		"examples"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/YolfiApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/Yolfi/Yolfi.node.js",
+			"dist/nodes/YolfiTrigger/YolfiTrigger.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "0.56.4",
+		"@types/node": "^22.0.0",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"typescript": "5.9.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
