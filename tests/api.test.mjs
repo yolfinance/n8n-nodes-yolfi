@@ -112,77 +112,31 @@ test('domain failures expose only a numeric support code and never raw server me
 	}
 });
 
-test('API credential is password-protected and both nodes test organization access', async () => {
+test('both nodes use the standard password-protected credential and a bounded read-only test', () => {
 	const credential = new YolfiApi();
 	assert.equal(
 		credential.properties.find((item) => item.name === 'apiKey').typeOptions.password,
 		true,
 	);
-	assert.equal(credential.test, undefined);
+	assert.equal(
+		credential.authenticate.properties.headers.Authorization,
+		'=Bearer {{$credentials.apiKey}}',
+	);
+	assert.equal(credential.test.request.baseURL, 'https://app.yolfi.com/api');
+	assert.equal(credential.test.request.url, '/private/organization/current');
+	assert.equal(credential.test.request.method, 'GET');
+	assert.equal(credential.test.request.json, true);
+	assert.equal(credential.test.request.timeout, 30000);
+	assert.equal(credential.test.request.disableFollowRedirect, true);
+	assert.ok(
+		credential.test.rules.some(
+			(rule) =>
+				rule.type === 'responseSuccessBody' &&
+				rule.properties.key === 'success' &&
+				rule.properties.value === false,
+		),
+	);
 	for (const node of [new Yolfi(), new YolfiTrigger()]) {
-		const testedBy = node.description.credentials[0].testedBy;
-		const testCredential = node.methods.credentialTest[testedBy];
-		const requests = [];
-		const result = await testCredential.call(
-			{
-				helpers: {
-					request: async (options) => {
-						requests.push(options);
-						return { success: true, data: { id: 'org-fixture' } };
-					},
-				},
-			},
-			{ data: { apiKey: 'fixture-api-key' } },
-		);
-		assert.equal(result.status, 'OK');
-		assert.equal(requests.length, 1);
-		assert.equal(requests[0].uri, 'https://app.yolfi.com/api/private/organization/current');
-		assert.equal(requests[0].method, 'GET');
-		assert.equal(requests[0].headers.Authorization, 'Bearer fixture-api-key');
-		assert.equal(requests[0].followRedirect, false);
-		assert.equal(requests[0].followAllRedirects, false);
-		assert.equal(requests[0].timeout, 30000);
-		assert.doesNotMatch(JSON.stringify(result), /fixture/);
+		assert.deepEqual(node.description.credentials, [{ name: 'yolfiApi', required: true }]);
 	}
-});
-
-test('credential testing rejects malformed responses and never returns raw HTTP errors', async () => {
-	const testCredential = new Yolfi().methods.credentialTest.yolfiApiTest;
-	for (const response of [
-		{},
-		{ success: false },
-		{ success: 'true' },
-		{ success: true },
-		{ success: true, data: {} },
-		null,
-		[],
-		'<html>proxy</html>',
-	]) {
-		const result = await testCredential.call(
-			{ helpers: { request: async () => response } },
-			{ data: { apiKey: 'fixture-api-key' } },
-		);
-		assert.equal(result.status, 'Error');
-	}
-	const result = await testCredential.call(
-		{
-			helpers: {
-				request: async () => {
-					throw Object.assign(new Error('fixture-private-error'), {
-						statusCode: 401,
-						config: { headers: { Authorization: 'fixture-private-api-key' } },
-					});
-				},
-			},
-		},
-		{ data: { apiKey: 'fixture-api-key' } },
-	);
-	assert.equal(result.status, 'Error');
-	assert.match(result.message, /API key/);
-	assert.doesNotMatch(JSON.stringify(result), /fixture-private/);
-	const empty = await testCredential.call(
-		{ helpers: { request: async () => assert.fail('Empty credentials must not make a request') } },
-		{ data: {} },
-	);
-	assert.equal(empty.status, 'Error');
 });

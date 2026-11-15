@@ -1,4 +1,9 @@
-import type { IAuthenticateGeneric, ICredentialType, INodeProperties } from 'n8n-workflow';
+import type {
+	IAuthenticateGeneric,
+	ICredentialTestRequest,
+	ICredentialType,
+	INodeProperties,
+} from 'n8n-workflow';
 
 export class YolfiApi implements ICredentialType {
 	name = 'yolfiApi';
@@ -24,5 +29,25 @@ export class YolfiApi implements ICredentialType {
 	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
 		properties: { headers: { Authorization: '=Bearer {{$credentials.apiKey}}' } },
+	};
+	test: ICredentialTestRequest = {
+		request: {
+			baseURL: 'https://app.yolfi.com/api',
+			url: '/private/organization/current',
+			method: 'GET',
+			json: true,
+			timeout: 30000,
+			disableFollowRedirect: true,
+		},
+		rules: [
+			{
+				type: 'responseSuccessBody',
+				properties: {
+					key: 'success',
+					value: false,
+					message: 'Yolfi rejected this API key or its organization access',
+				},
+			},
+		],
 	};
 }

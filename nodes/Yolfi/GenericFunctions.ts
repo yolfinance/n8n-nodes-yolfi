@@ -1,12 +1,9 @@
 import type {
 	IDataObject,
-	ICredentialsDecrypted,
-	ICredentialTestFunctions,
 	IExecuteFunctions,
 	IHookFunctions,
 	IHttpRequestMethods,
 	IWebhookFunctions,
-	INodeCredentialTestResult,
 } from 'n8n-workflow';
 import { NodeApiError } from 'n8n-workflow';
 
@@ -48,43 +45,6 @@ function requestFailureDescription(httpCode?: string): string {
 	if (httpCode?.startsWith('3'))
 		return 'Yolfi returned a redirect. Authenticated redirects are disabled.';
 	return 'Could not complete the Yolfi request. Check connectivity and the operation status before retrying.';
-}
-
-export async function yolfiApiTest(
-	this: ICredentialTestFunctions,
-	credential: ICredentialsDecrypted,
-): Promise<INodeCredentialTestResult> {
-	const apiKey = credential.data?.apiKey;
-	if (typeof apiKey !== 'string' || !apiKey.trim())
-		return { status: 'Error', message: 'Enter your Yolfi organization API key' };
-	try {
-		// n8n credential-test contexts expose request, without an httpRequest helper.
-		// eslint-disable-next-line @n8n/community-nodes/no-deprecated-workflow-functions
-		const response: unknown = await this.helpers.request({
-			method: 'GET',
-			uri: `${API_BASE_URL}/private/organization/current`,
-			headers: { Authorization: `Bearer ${apiKey}` },
-			json: true,
-			timeout: 30000,
-			followRedirect: false,
-			followAllRedirects: false,
-		});
-		const envelope = response as IDataObject | null;
-		const organization = envelope?.data as IDataObject | null;
-		if (
-			envelope?.success === true &&
-			organization &&
-			typeof organization.id === 'string' &&
-			organization.id
-		)
-			return { status: 'OK', message: 'Connected to your Yolfi organization' };
-		return {
-			status: 'Error',
-			message: 'Yolfi did not confirm organization access for this API key',
-		};
-	} catch (error) {
-		return { status: 'Error', message: requestFailureDescription(requestFailureCode(error)) };
-	}
 }
 
 export async function yolfiApiRequest(

@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-yolfi",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Create Yolfi crypto checkouts and automate workflows with verified payment events",
 	"license": "MIT",
 	"homepage": "https://yolfi.com",

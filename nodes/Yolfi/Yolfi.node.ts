@@ -7,7 +7,7 @@ import type {
 } from 'n8n-workflow';
 import { NodeApiError, NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
-import { yolfiApiRequest, yolfiApiTest } from './GenericFunctions';
+import { yolfiApiRequest } from './GenericFunctions';
 import { yolfiProperties } from './descriptions';
 import { paymentLinkOutput, subscriptionOutput } from './Output';
 
@@ -275,11 +275,9 @@ export class Yolfi implements INodeType {
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
 		usableAsTool: true,
-		credentials: [{ name: 'yolfiApi', required: true, testedBy: 'yolfiApiTest' }],
+		credentials: [{ name: 'yolfiApi', required: true }],
 		properties: yolfiProperties,
 	};
-
-	methods = { credentialTest: { yolfiApiTest } };
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();

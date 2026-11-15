@@ -8,7 +8,7 @@ import type {
 	IWebhookResponseData,
 } from 'n8n-workflow';
 import { NodeApiError, NodeConnectionTypes } from 'n8n-workflow';
-import { yolfiApiRequest, yolfiApiTest } from '../Yolfi/GenericFunctions';
+import { yolfiApiRequest } from '../Yolfi/GenericFunctions';
 
 const WEBHOOK_PATH = '/private/organization/webhook-endpoints';
 type TriggerContext = IHookFunctions | IWebhookFunctions;
@@ -83,7 +83,7 @@ export class YolfiTrigger implements INodeType {
 		defaults: { name: 'Yolfi Trigger' },
 		inputs: [],
 		outputs: [NodeConnectionTypes.Main],
-		credentials: [{ name: 'yolfiApi', required: true, testedBy: 'yolfiApiTest' }],
+		credentials: [{ name: 'yolfiApi', required: true }],
 		webhooks: [
 			{ name: 'default', httpMethod: 'POST', responseMode: 'onReceived', path: 'webhook' },
 		],
@@ -138,8 +138,6 @@ export class YolfiTrigger implements INodeType {
 			},
 		],
 	};
-
-	methods = { credentialTest: { yolfiApiTest } };
 
 	webhookMethods = {
 		default: {
