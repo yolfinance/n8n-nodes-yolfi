@@ -89,7 +89,7 @@ Select your own Yolfi credential after importing. The examples contain no API ke
 
 The package uses n8n Nodes API version 1. See [Yolfi API documentation](https://docs.yolfi.com/en/api) and [webhook documentation](https://docs.yolfi.com/en/webhooks/webhook-details).
 
-For API problems contact [Yolfi](https://yolfi.com). Report package issues in the [issue tracker](https://github.com/yolfipay/n8n-nodes-yolfi/issues).
+For API problems contact [Yolfi](https://yolfi.com). Report package issues in the [issue tracker](https://github.com/yolfinance/n8n-nodes-yolfi/issues).
 
 ## License
 

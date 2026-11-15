@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   publish:
-    if: github.repository == 'yolfipay/n8n-nodes-yolfi'
+    if: github.repository == 'yolfinance/n8n-nodes-yolfi'
     runs-on: ubuntu-latest
     permissions:
       contents: read

@@ -17,10 +17,10 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/yolfipay/n8n-nodes-yolfi.git"
+		"url": "git+https://github.com/yolfinance/n8n-nodes-yolfi.git"
 	},
 	"bugs": {
-		"url": "https://github.com/yolfipay/n8n-nodes-yolfi/issues"
+		"url": "https://github.com/yolfinance/n8n-nodes-yolfi/issues"
 	},
 	"engines": {
 		"node": ">=22.16"
